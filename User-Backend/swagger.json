@@ -1,20 +1,21 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API de Gestión de Usuarios",
+    "title": "API RESTful de Gestión de Usuarios",
     "version": "1.0.0",
-    "description": "API RESTful para gestionar usuarios. Permite crear, obtener, actualizar y eliminar usuarios."
+    "description": "Esta API permite gestionar usuarios en una base de datos. Puedes crear, consultar, actualizar y eliminar usuarios mediante peticiones HTTP."
   },
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "Servidor local"
+      "description": "Servidor local para desarrollo"
     }
   ],
   "paths": {
     "/api/users": {
       "get": {
-        "summary": "Obtener todos los usuarios",
+        "summary": "Listar todos los usuarios",
+        "description": "Retorna todos los usuarios almacenados en la base de datos.",
         "responses": {
           "200": {
             "description": "Lista de usuarios",
@@ -31,35 +32,47 @@
       },
       "post": {
         "summary": "Crear un nuevo usuario",
+        "description": "Crea un nuevo usuario con nombre, apellido, edad y email.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserInput" }
+              "schema": { "$ref": "#/components/schemas/UserInput" },
+              "example": {
+                "nombre": "Carlos",
+                "apellido": "Pérez",
+                "edad": 28,
+                "email": "carlos.perez@example.com"
+              }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Usuario creado",
+            "description": "Usuario creado exitosamente",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/User" }
               }
             }
+          },
+          "400": {
+            "description": "Datos inválidos"
           }
         }
       }
     },
     "/api/users/{id}": {
       "get": {
-        "summary": "Obtener un usuario por ID",
+        "summary": "Obtener usuario por ID",
+        "description": "Retorna un único usuario dado su ID de MongoDB.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": { "type": "string" },
+            "description": "ID del usuario a consultar"
           }
         ],
         "responses": {
@@ -78,25 +91,33 @@
       },
       "put": {
         "summary": "Actualizar un usuario",
+        "description": "Actualiza un usuario existente identificado por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": { "type": "string" },
+            "description": "ID del usuario a actualizar"
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserInput" }
+              "schema": { "$ref": "#/components/schemas/UserInput" },
+              "example": {
+                "nombre": "Ana",
+                "apellido": "López",
+                "edad": 32,
+                "email": "ana.lopez@example.com"
+              }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Usuario actualizado",
+            "description": "Usuario actualizado exitosamente",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/User" }
@@ -109,18 +130,27 @@
         }
       },
       "delete": {
-        "summary": "Eliminar un usuario",
+        "summary": "Eliminar usuario",
+        "description": "Elimina un usuario dado su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": { "type": "string" },
+            "description": "ID del usuario a eliminar"
           }
         ],
         "responses": {
           "200": {
-            "description": "Usuario eliminado correctamente"
+            "description": "Usuario eliminado correctamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "mensaje": "Usuario eliminado correctamente"
+                }
+              }
+            }
           },
           "404": {
             "description": "Usuario no encontrado"
@@ -134,22 +164,37 @@
       "User": {
         "type": "object",
         "properties": {
-          "_id": { "type": "string" },
-          "nombre": { "type": "string" },
-          "apellido": { "type": "string" },
-          "edad": { "type": "integer" },
-          "email": { "type": "string" }
+          "_id": {
+            "type": "string",
+            "description": "ID único generado por MongoDB"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Laura"
+          },
+          "apellido": {
+            "type": "string",
+            "example": "Gómez"
+          },
+          "edad": {
+            "type": "integer",
+            "example": 29
+          },
+          "email": {
+            "type": "string",
+            "example": "laura.gomez@example.com"
+          }
         }
       },
       "UserInput": {
         "type": "object",
+        "required": ["nombre", "apellido", "edad", "email"],
         "properties": {
           "nombre": { "type": "string" },
           "apellido": { "type": "string" },
           "edad": { "type": "integer" },
-          "email": { "type": "string" }
-        },
-        "required": ["nombre", "apellido", "edad", "email"]
+          "email": { "type": "string", "format": "email" }
+        }
       }
     }
   }
