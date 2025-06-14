@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+//Esquema de los datos que almacena la base de datos de cada Usuario
+//Recordar que MongoDB automaticamente añade un ID por eso no es necesario incluirlo 
 const userSchema = new mongoose.Schema({
     nombre: {
         type: String,
