@@ -107,10 +107,10 @@
             "application/json": {
               "schema": { "$ref": "#/components/schemas/UserInput" },
               "example": {
-                "nombre": "Ana",
-                "apellido": "López",
-                "edad": 32,
-                "email": "ana.lopez@example.com"
+                "nombre": "Carlos",
+                "apellido": "Pérez",
+                "edad": 28,
+                "email": "carlos.perez@example.com"
               }
             }
           }
